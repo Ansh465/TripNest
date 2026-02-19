@@ -44,7 +44,7 @@ export function PackingList({ itineraryId }: PackingListProps) {
     const [loading, setLoading] = useState(false);
 
     const fetchItems = useCallback(async () => {
-        const { data } = await supabase
+        const { data } = await (supabase as any)
             .from("packing_items")
             .select("*")
             .eq("itinerary_id", itineraryId)
@@ -62,7 +62,7 @@ export function PackingList({ itineraryId }: PackingListProps) {
         if (!newItemName) return;
         setLoading(true);
 
-        const { error } = await supabase.from("packing_items").insert({
+        const { error } = await (supabase as any).from("packing_items").insert({
             itinerary_id: itineraryId,
             item_name: newItemName,
             category: "Custom",
@@ -79,7 +79,7 @@ export function PackingList({ itineraryId }: PackingListProps) {
         // Optimistic update
         setItems(items.map(i => i.id === id ? { ...i, is_checked: !currentChecked } : i));
 
-        const { error } = await supabase
+        const { error } = await (supabase as any)
             .from("packing_items")
             .update({ is_checked: !currentChecked })
             .eq("id", id);
@@ -88,7 +88,7 @@ export function PackingList({ itineraryId }: PackingListProps) {
     };
 
     const handleDelete = async (id: string) => {
-        const { error } = await supabase.from("packing_items").delete().eq("id", id);
+        const { error } = await (supabase as any).from("packing_items").delete().eq("id", id);
         if (!error) fetchItems();
     };
 
@@ -102,7 +102,7 @@ export function PackingList({ itineraryId }: PackingListProps) {
             is_checked: false
         }));
 
-        const { error } = await supabase.from("packing_items").insert(itemsToInsert);
+        const { error } = await (supabase as any).from("packing_items").insert(itemsToInsert);
 
         if (!error) {
             fetchItems();
@@ -193,8 +193,8 @@ export function PackingList({ itineraryId }: PackingListProps) {
                                         <div
                                             key={item.id}
                                             className={`flex items-center justify-between p-2 rounded-lg transition-colors group ${item.is_checked
-                                                    ? 'bg-neutral-50 dark:bg-neutral-800/30 text-neutral-400 decoration-neutral-400'
-                                                    : 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800'
+                                                ? 'bg-neutral-50 dark:bg-neutral-800/30 text-neutral-400 decoration-neutral-400'
+                                                : 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white hover:bg-neutral-50 dark:hover:bg-neutral-800'
                                                 }`}
                                         >
                                             <div
@@ -202,8 +202,8 @@ export function PackingList({ itineraryId }: PackingListProps) {
                                                 onClick={() => handleToggle(item.id, item.is_checked)}
                                             >
                                                 <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${item.is_checked
-                                                        ? 'bg-purple-600 border-purple-600 text-white'
-                                                        : 'border-neutral-300 dark:border-neutral-600 bg-transparent'
+                                                    ? 'bg-purple-600 border-purple-600 text-white'
+                                                    : 'border-neutral-300 dark:border-neutral-600 bg-transparent'
                                                     }`}>
                                                     {item.is_checked && <CheckSquare className="w-3.5 h-3.5" />}
                                                 </div>

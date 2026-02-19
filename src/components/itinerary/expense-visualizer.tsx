@@ -108,7 +108,7 @@ export function ExpenseVisualizer({ budget, expenses, currency }: ExpenseVisuali
                             ))}
                         </Pie>
                         <Tooltip
-                            formatter={(value: number) => `${currency} ${value.toLocaleString()}`}
+                            formatter={(value: any) => `${currency} ${value.toLocaleString()}`}
                             contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                         />
                         <Legend />

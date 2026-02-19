@@ -19,7 +19,7 @@ export function Footer() {
                 </div>
 
                 <div className="flex gap-4">
-                    <a href="https://github.com/yourusername/tripnest" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white transition-colors">
+                    <a href="https://github.com/ansh465/tripnest" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white transition-colors">
                         <Github className="w-5 h-5" />
                     </a>
                     {/* Add more social links as needed */}

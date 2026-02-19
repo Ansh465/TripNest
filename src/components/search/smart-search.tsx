@@ -8,7 +8,7 @@ import { searchItineraries } from '@/app/actions/search';
 import { PlaceResult } from '@/types/places';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { useDebounce } from '@/hooks/use-debounce'; // Assuming you have this or will implementation inline
+// Local hook used below
 
 // Simple debounce hook if not present
 function useDebouncedValue<T>(value: T, delay: number): T {

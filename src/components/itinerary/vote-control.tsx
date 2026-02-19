@@ -19,7 +19,7 @@ export function VoteControl({ itemId }: VoteControlProps) {
     useEffect(() => {
         async function fetchVotes() {
             // Get total score
-            const { data: votes, error } = await supabase
+            const { data: votes, error } = await (supabase as any)
                 .from('itinerary_item_votes')
                 .select('vote_type, user_id');
 
@@ -46,17 +46,17 @@ export function VoteControl({ itemId }: VoteControlProps) {
             // This is naive count. 
             // Better: use .rpc() for performance if heavily used, or just select count.
             // Select all votes for this item
-            const { data: itemVotes, error } = await supabase
+            const { data: itemVotes, error } = await (supabase as any)
                 .from('itinerary_item_votes')
                 .select('vote_type, user_id')
                 .eq('itinerary_item_id', itemId);
 
             if (itemVotes) {
-                const newScore = itemVotes.reduce((acc, v) => acc + v.vote_type, 0);
+                const newScore = itemVotes.reduce((acc: number, v: any) => acc + v.vote_type, 0);
                 setScore(newScore);
 
                 if (user) {
-                    const myVote = itemVotes.find(v => v.user_id === user.id);
+                    const myVote = itemVotes.find((v: any) => v.user_id === user.id);
                     if (myVote) setUserVote(myVote.vote_type as 1 | -1);
                 }
             }
@@ -112,14 +112,14 @@ export function VoteControl({ itemId }: VoteControlProps) {
         try {
             if (userVote === type) {
                 // Delete
-                await supabase
+                await (supabase as any)
                     .from('itinerary_item_votes')
                     .delete()
                     .eq('itinerary_item_id', itemId)
                     .eq('user_id', user.id);
             } else {
                 // Upsert
-                await supabase
+                await (supabase as any)
                     .from('itinerary_item_votes')
                     .upsert({
                         itinerary_item_id: itemId,

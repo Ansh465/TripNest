@@ -3,12 +3,17 @@ import { createClient } from "@/lib/supabase-server";
 import { GuestLanding } from "@/components/home/guest-landing";
 import { DashboardView } from "@/components/dashboard/dashboard-view";
 
+import { Database } from "@/types/supabase";
+
+type Trip = Database['public']['Tables']['itineraries']['Row'];
+type TrendingTrip = Trip & { owner: { full_name: string | null; avatar_url: string | null } | null };
+
 export default async function Home() {
   const supabase = await createClient();
   const { data: { session } } = await supabase.auth.getSession();
 
-  let recentTrips = [];
-  let trendingTrips = [];
+  let recentTrips: Trip[] = [];
+  let trendingTrips: TrendingTrip[] = [];
 
   if (session) {
     // Fetch User's Recent Trips
@@ -18,7 +23,7 @@ export default async function Home() {
       .eq('user_id', session.user.id)
       .order('updated_at', { ascending: false })
       .limit(3);
-    recentTrips = recent || [];
+    recentTrips = recent as Trip[] || [];
 
     // Fetch Trending Public Trips
     const { data: trending } = await supabase
@@ -28,7 +33,7 @@ export default async function Home() {
       .neq('user_id', session.user.id)
       .order('upvotes', { ascending: false })
       .limit(3);
-    trendingTrips = trending || [];
+    trendingTrips = trending as any as TrendingTrip[] || [];
   }
 
   return (

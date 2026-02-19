@@ -29,7 +29,7 @@ export function ItineraryLikeButton({ itineraryId, initialLikes = 0 }: Itinerary
             // Ideally, we should have an 'itinerary_votes' table to track unique user likes.
             // Here we are just incrementing/decrementing the counter on the itinerary row.
 
-            const { error } = await supabase.rpc('increment_itinerary_upvotes', {
+            const { error } = await (supabase as any).rpc('increment_itinerary_upvotes', {
                 row_id: itineraryId,
                 count: newIsLiked ? 1 : -1
             });
@@ -69,8 +69,8 @@ export function ItineraryLikeButton({ itineraryId, initialLikes = 0 }: Itinerary
             onClick={handleLike}
             disabled={loading}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all ${isLiked
-                    ? 'bg-rose-50 border-rose-200 text-rose-600 dark:bg-rose-900/20 dark:border-rose-800 dark:text-rose-400'
-                    : 'bg-white border-neutral-200 text-neutral-600 hover:border-rose-200 hover:text-rose-600 dark:bg-neutral-900 dark:border-neutral-800 dark:text-neutral-400'
+                ? 'bg-rose-50 border-rose-200 text-rose-600 dark:bg-rose-900/20 dark:border-rose-800 dark:text-rose-400'
+                : 'bg-white border-neutral-200 text-neutral-600 hover:border-rose-200 hover:text-rose-600 dark:bg-neutral-900 dark:border-neutral-800 dark:text-neutral-400'
                 }`}
             title="Like this itinerary"
         >

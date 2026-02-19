@@ -28,7 +28,7 @@ export function JournalModal({ itemId, isOpen, onClose, user }: JournalModalProp
     const [loading, setLoading] = useState(false);
 
     const fetchEntries = useCallback(async () => {
-        const { data } = await supabase
+        const { data } = await (supabase as any)
             .from("journal_entries")
             .select("*")
             .eq("itinerary_item_id", itemId)
@@ -47,7 +47,7 @@ export function JournalModal({ itemId, isOpen, onClose, user }: JournalModalProp
         if (!newContent && !newPhotoUrl) return;
         setLoading(true);
 
-        const { error } = await supabase.from("journal_entries").insert({
+        const { error } = await (supabase as any).from("journal_entries").insert({
             itinerary_item_id: itemId,
             user_id: user.id,
             content: newContent,
@@ -63,7 +63,7 @@ export function JournalModal({ itemId, isOpen, onClose, user }: JournalModalProp
     };
 
     const handleDelete = async (id: string) => {
-        const { error } = await supabase.from("journal_entries").delete().eq("id", id);
+        const { error } = await (supabase as any).from("journal_entries").delete().eq("id", id);
         if (!error) fetchEntries();
     };
 
