@@ -2,8 +2,17 @@
 
 import { createClient } from '@/lib/supabase-server';
 
+export interface ItinerarySearchResult {
+    id: string;
+    title: string;
+    description?: string | null;
+    owner?: {
+        full_name: string | null;
+    } | null;
+}
+
 export interface SearchResult {
-    itineraries: any[];
+    itineraries: ItinerarySearchResult[];
 }
 
 export async function searchItineraries(query: string): Promise<SearchResult> {
@@ -16,7 +25,7 @@ export async function searchItineraries(query: string): Promise<SearchResult> {
     try {
         const { data, error } = await supabase
             .from('itineraries')
-            .select('id, title, destination, days, owner:users(full_name)')
+            .select('id, title, description, owner:users(full_name)')
             .eq('public', true)
             .ilike('title', `%${query}%`)
             .limit(5);

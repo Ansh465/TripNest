@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState } from 'react';
 import {
     DndContext,
     closestCenter,
@@ -21,9 +21,6 @@ import {
     verticalListSortingStrategy
 } from '@dnd-kit/sortable';
 import { DayColumn, SortableItem, ItineraryItem } from './sortable-components';
-import { createClient } from '@/lib/supabase';
-import { Loader2 } from 'lucide-react';
-import { PlaceResult } from '@/types/places';
 
 import { JournalModal } from './journal-modal';
 
@@ -43,7 +40,6 @@ export function ItineraryBuilder({ itineraryId, items, onItemsChange, user }: It
     // We'll calculate max day from items + 1 buffer
     const maxDay = Math.max(...items.map(i => i.day_number), 3);
     const [days, setDays] = useState(Array.from({ length: maxDay }, (_, i) => i + 1));
-    const supabase = createClient();
 
     const sensors = useSensors(
         useSensor(PointerSensor),

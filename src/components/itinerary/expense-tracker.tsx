@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { createClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { DollarSign, Plus, Trash2, PieChart, TrendingUp } from "lucide-react";
 import { ExpenseVisualizer } from "./expense-visualizer";
 
@@ -21,7 +21,7 @@ interface ExpenseTrackerProps {
 }
 
 export function ExpenseTracker({ itineraryId, initialBudget, currency, onBudgetUpdate }: ExpenseTrackerProps) {
-    const supabase = createClient();
+    // Using stable supabase from @/lib/supabase
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [budget, setBudget] = useState(initialBudget);
     const [isEditingBudget, setIsEditingBudget] = useState(false);
@@ -40,8 +40,8 @@ export function ExpenseTracker({ itineraryId, initialBudget, currency, onBudgetU
             .eq("itinerary_id", itineraryId)
             .order("date", { ascending: false });
 
-        if (data) setExpenses(data as any);
-    }, [itineraryId, supabase]);
+        if (data) setExpenses(data as Expense[]);
+    }, [itineraryId]);
 
     useEffect(() => {
         fetchExpenses();

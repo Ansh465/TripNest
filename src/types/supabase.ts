@@ -235,6 +235,8 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          updated_at: string | null
+          bio: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -242,6 +244,8 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id: string
+          updated_at?: string | null
+          bio?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -249,8 +253,126 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          updated_at?: string | null
+          bio?: string | null
         }
         Relationships: []
+      }
+      journal_entries: {
+        Row: {
+          id: string
+          itinerary_item_id: string
+          user_id: string
+          content: string | null
+          photo_url: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          itinerary_item_id: string
+          user_id: string
+          content?: string | null
+          photo_url?: string | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          itinerary_item_id?: string
+          user_id?: string
+          content?: string | null
+          photo_url?: string | null
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journal_entries_itinerary_item_id_fkey"
+            columns: ["itinerary_item_id"]
+            isOneToOne: false
+            referencedRelation: "itinerary_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journal_entries_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      packing_items: {
+        Row: {
+          id: string
+          itinerary_id: string
+          item_name: string
+          is_checked: boolean | null
+          category: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          itinerary_id: string
+          item_name: string
+          is_checked?: boolean | null
+          category?: string | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          itinerary_id?: string
+          item_name?: string
+          is_checked?: boolean | null
+          category?: string | null
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "packing_items_itinerary_id_fkey"
+            columns: ["itinerary_id"]
+            isOneToOne: false
+            referencedRelation: "itineraries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      itinerary_item_votes: {
+        Row: {
+          id: string
+          user_id: string
+          itinerary_item_id: string
+          vote_type: number
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          itinerary_item_id: string
+          vote_type: number
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          itinerary_item_id?: string
+          vote_type?: number
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itinerary_item_votes_itinerary_item_id_fkey"
+            columns: ["itinerary_item_id"]
+            isOneToOne: false
+            referencedRelation: "itinerary_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "itinerary_item_votes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -390,4 +512,3 @@ export const Constants = {
     Enums: {},
   },
 } as const
-

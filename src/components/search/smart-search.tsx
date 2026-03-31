@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, MapPin, Compass, Plus, Loader2, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { searchItineraries } from '@/app/actions/search';
+import { searchItineraries, type ItinerarySearchResult } from '@/app/actions/search';
 import { PlaceResult } from '@/types/places';
 import clsx from 'clsx';
 import Link from 'next/link';
@@ -24,7 +24,7 @@ export function SmartSearch() {
     const router = useRouter();
     const [query, setQuery] = useState('');
     const debouncedQuery = useDebouncedValue(query, 500);
-    const [itineraries, setItineraries] = useState<any[]>([]);
+    const [itineraries, setItineraries] = useState<ItinerarySearchResult[]>([]);
     const [places, setPlaces] = useState<PlaceResult[]>([]);
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
@@ -131,7 +131,7 @@ export function SmartSearch() {
                                         <div>
                                             <div className="text-white font-medium">{itin.title}</div>
                                             <div className="text-xs text-neutral-400">
-                                                by {itin.owner?.full_name || 'Anonymous'} • {itin.destination}
+                                                by {itin.owner?.full_name || 'Anonymous'}
                                             </div>
                                         </div>
                                     </Link>
@@ -176,7 +176,7 @@ export function SmartSearch() {
                                     <Plus className="w-5 h-5" />
                                 </div>
                                 <div>
-                                    <div className="text-white font-medium">Create new trip to "{query}"</div>
+                                    <div className="text-white font-medium">Create new trip to &quot;{query}&quot;</div>
                                     <div className="text-xs text-neutral-400">
                                         Start from scratch
                                     </div>

@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { createClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { Camera, Save, X, Trash2 } from "lucide-react";
 import { User } from "@supabase/supabase-js";
+import Image from "next/image";
 
 interface JournalEntry {
     id: string;
@@ -21,21 +22,21 @@ interface JournalModalProps {
 }
 
 export function JournalModal({ itemId, isOpen, onClose, user }: JournalModalProps) {
-    const supabase = createClient();
+    // Using stable supabase from @/lib/supabase
     const [entries, setEntries] = useState<JournalEntry[]>([]);
     const [newContent, setNewContent] = useState("");
     const [newPhotoUrl, setNewPhotoUrl] = useState("");
     const [loading, setLoading] = useState(false);
 
     const fetchEntries = useCallback(async () => {
-        const { data } = await (supabase as any)
+        const { data } = await supabase
             .from("journal_entries")
             .select("*")
             .eq("itinerary_item_id", itemId)
             .order("created_at", { ascending: false });
 
         if (data) setEntries(data as JournalEntry[]);
-    }, [itemId, supabase]);
+    }, [itemId]);
 
     useEffect(() => {
         if (isOpen) {
@@ -47,7 +48,7 @@ export function JournalModal({ itemId, isOpen, onClose, user }: JournalModalProp
         if (!newContent && !newPhotoUrl) return;
         setLoading(true);
 
-        const { error } = await (supabase as any).from("journal_entries").insert({
+        const { error } = await supabase.from("journal_entries").insert({
             itinerary_item_id: itemId,
             user_id: user.id,
             content: newContent,
@@ -63,7 +64,7 @@ export function JournalModal({ itemId, isOpen, onClose, user }: JournalModalProp
     };
 
     const handleDelete = async (id: string) => {
-        const { error } = await (supabase as any).from("journal_entries").delete().eq("id", id);
+        const { error } = await supabase.from("journal_entries").delete().eq("id", id);
         if (!error) fetchEntries();
     };
 
@@ -123,8 +124,13 @@ export function JournalModal({ itemId, isOpen, onClose, user }: JournalModalProp
                                 )}
 
                                 {entry.photo_url && (
-                                    <div className="mb-3 rounded-lg overflow-hidden">
-                                        <img src={entry.photo_url} alt="Memory" className="w-full h-auto object-cover" />
+                                    <div className="mb-3 rounded-lg overflow-hidden relative aspect-video">
+                                        <Image
+                                            src={entry.photo_url}
+                                            alt="Memory"
+                                            fill
+                                            className="object-cover"
+                                        />
                                     </div>
                                 )}
                                 {entry.content && (

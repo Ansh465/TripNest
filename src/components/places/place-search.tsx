@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, Loader2, X } from 'lucide-react';
+import { Search, Loader2, X, Compass, Plus } from 'lucide-react';
 import { PlaceResult } from '@/types/places';
 import { PlaceCard } from './place-card';
+import { searchItineraries, type SearchResult, type ItinerarySearchResult } from '@/app/actions/search';
+import Link from 'next/link';
 
 
 interface PlaceSearchProps {
@@ -16,7 +18,7 @@ export function PlaceSearch({ onAddPlace, mode = 'select' }: PlaceSearchProps) {
     const [results, setResults] = useState<PlaceResult[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [itineraries, setItineraries] = useState<any[]>([]);
+    const [itineraries, setItineraries] = useState<ItinerarySearchResult[]>([]);
 
     useEffect(() => {
         const timer = setTimeout(async () => {
@@ -30,7 +32,7 @@ export function PlaceSearch({ onAddPlace, mode = 'select' }: PlaceSearchProps) {
             setError(null);
 
             try {
-                const promises: Promise<any>[] = [
+                const promises: Promise<any | SearchResult>[] = [
                     fetch(`/api/places/search?q=${encodeURIComponent(query)}`).then(res => {
                         if (!res.ok) throw new Error('Failed to fetch results');
                         return res.json();
@@ -111,7 +113,7 @@ export function PlaceSearch({ onAddPlace, mode = 'select' }: PlaceSearchProps) {
                                 <div>
                                     <div className="font-semibold text-neutral-900 dark:text-neutral-50">{itin.title}</div>
                                     <div className="text-sm text-neutral-500 dark:text-neutral-400">
-                                        by {itin.owner?.full_name || 'Anonymous'} • {itin.destination}
+                                        by {itin.owner?.full_name || 'Anonymous'}
                                     </div>
                                 </div>
                             </Link>
@@ -155,14 +157,14 @@ export function PlaceSearch({ onAddPlace, mode = 'select' }: PlaceSearchProps) {
                             className="flex items-center justify-center gap-2 p-4 rounded-lg border-2 border-dashed border-neutral-300 text-neutral-500 hover:border-neutral-900 hover:text-neutral-900 transition-all dark:border-neutral-700 dark:text-neutral-400 dark:hover:border-neutral-50 dark:hover:text-neutral-50"
                         >
                             <Plus className="w-5 h-5" />
-                            <span className="font-medium">Create a new trip to "{query}"</span>
+                            <span className="font-medium">Create a new trip to &quot;{query}&quot;</span>
                         </Link>
                     </div>
                 )}
 
                 {!loading && query.length >= 3 && results.length === 0 && itineraries.length === 0 && (
                     <div className="text-center text-neutral-500 py-8">
-                        No results found for "{query}".
+                        No results found for &quot;{query}&quot;.
                         {mode === 'explore' && (
                             <div className="mt-4">
                                 <Link
@@ -179,7 +181,3 @@ export function PlaceSearch({ onAddPlace, mode = 'select' }: PlaceSearchProps) {
         </div>
     );
 }
-
-import Link from 'next/link';
-import { searchItineraries } from '@/app/actions/search';
-import { Compass, Plus } from 'lucide-react';

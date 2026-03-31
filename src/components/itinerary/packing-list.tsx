@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { createClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { CheckSquare, Plus, Trash2, Wand2, Luggage } from "lucide-react";
 
 interface PackingItem {
@@ -38,13 +38,13 @@ const DEFAULT_ITEMS = [
 ];
 
 export function PackingList({ itineraryId }: PackingListProps) {
-    const supabase = createClient();
+    // Using stable supabase from @/lib/supabase
     const [items, setItems] = useState<PackingItem[]>([]);
     const [newItemName, setNewItemName] = useState("");
     const [loading, setLoading] = useState(false);
 
     const fetchItems = useCallback(async () => {
-        const { data } = await (supabase as any)
+        const { data } = await supabase
             .from("packing_items")
             .select("*")
             .eq("itinerary_id", itineraryId)
@@ -52,7 +52,7 @@ export function PackingList({ itineraryId }: PackingListProps) {
             .order("item_name", { ascending: true });
 
         if (data) setItems(data as PackingItem[]);
-    }, [itineraryId, supabase]);
+    }, [itineraryId]);
 
     useEffect(() => {
         fetchItems();
@@ -62,7 +62,7 @@ export function PackingList({ itineraryId }: PackingListProps) {
         if (!newItemName) return;
         setLoading(true);
 
-        const { error } = await (supabase as any).from("packing_items").insert({
+        const { error } = await supabase.from("packing_items").insert({
             itinerary_id: itineraryId,
             item_name: newItemName,
             category: "Custom",
@@ -79,7 +79,7 @@ export function PackingList({ itineraryId }: PackingListProps) {
         // Optimistic update
         setItems(items.map(i => i.id === id ? { ...i, is_checked: !currentChecked } : i));
 
-        const { error } = await (supabase as any)
+        const { error } = await supabase
             .from("packing_items")
             .update({ is_checked: !currentChecked })
             .eq("id", id);
@@ -88,7 +88,7 @@ export function PackingList({ itineraryId }: PackingListProps) {
     };
 
     const handleDelete = async (id: string) => {
-        const { error } = await (supabase as any).from("packing_items").delete().eq("id", id);
+        const { error } = await supabase.from("packing_items").delete().eq("id", id);
         if (!error) fetchItems();
     };
 
@@ -102,7 +102,7 @@ export function PackingList({ itineraryId }: PackingListProps) {
             is_checked: false
         }));
 
-        const { error } = await (supabase as any).from("packing_items").insert(itemsToInsert);
+        const { error } = await supabase.from("packing_items").insert(itemsToInsert as any);
 
         if (!error) {
             fetchItems();

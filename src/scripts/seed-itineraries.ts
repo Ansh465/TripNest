@@ -9,7 +9,7 @@ if (fs.existsSync(envPath)) {
     const envConfig = fs.readFileSync(envPath, 'utf-8');
     envConfig.split('\n').forEach(line => {
         const [key, value] = line.split('=');
-        if (key && value) {
+        if (key && value && !process.env[key.trim()]) {
             process.env[key.trim()] = value.trim();
         }
     });
@@ -111,19 +111,51 @@ async function main() {
     console.log('Seeding itineraries...');
 
     // 1. Get a valid user
-    // Try to find a user, or create one if none exist?
-    // We can select from auth.users, but service_role can access public tables mostly.
-    // Actually, inserting into itineraries requires a valid owner_id (FK to auth.users).
-    // We need to fetch an existing user.
+    // We try to find a user, or create one if none exist.
     const { data: { users }, error: userError } = await supabase.auth.admin.listUsers();
 
-    if (userError || !users || users.length === 0) {
-        console.error('No users found. Please sign up a user first or check Supabase connection.');
+    if (userError) {
+        console.error('Error fetching users:', userError);
         process.exit(1);
     }
 
-    const user = users[0]; // Use the first user found
-    console.log(`Using user: ${user.email} (${user.id})`);
+    let user;
+
+    if (!users || users.length === 0) {
+        console.log('No users found. Creating default admin user (admin@tripnest.demo)...');
+        // Create an admin user so we have an owner
+        const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+            email: 'admin@tripnest.demo',
+            password: 'password123',
+            email_confirm: true,
+            user_metadata: { full_name: 'TripNest Admin' }
+        });
+
+        if (createError || !newUser.user) {
+            console.error('Failed to create default user:', createError);
+            process.exit(1);
+        }
+        user = newUser.user;
+        console.log('Created user:', user.email);
+    } else {
+        user = users[0];
+        console.log(`Using existing user: ${user.email} (${user.id})`);
+    }
+
+    // Ensure the profile exists in public.users (in case the trigger didn't run)
+    const { error: profileError } = await supabase
+        .from('users')
+        .upsert({
+            id: user.id,
+            email: user.email,
+            full_name: user.user_metadata?.full_name || 'Admin',
+            avatar_url: user.user_metadata?.avatar_url
+        });
+
+    if (profileError) {
+        console.error('Error ensuring user profile exists:', profileError);
+        process.exit(1);
+    }
 
     // 2. Parse Data
     const lines = RAW_DATA.split('\n');
