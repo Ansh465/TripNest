@@ -23,6 +23,8 @@ import {
 import { DayColumn, SortableItem, ItineraryItem } from './sortable-components';
 
 import { JournalModal } from './journal-modal';
+import { generateItinerary } from '@/app/actions/ai';
+import { Sparkles, X, Wand2 } from 'lucide-react';
 
 interface ItineraryBuilderProps {
     itineraryId: string;
@@ -34,6 +36,9 @@ interface ItineraryBuilderProps {
 export function ItineraryBuilder({ itineraryId, items, onItemsChange, user }: ItineraryBuilderProps) {
     const [activeId, setActiveId] = useState<string | null>(null);
     const [journalItemId, setJournalItemId] = useState<string | null>(null);
+    const [isAIModalOpen, setIsAIModalOpen] = useState(false);
+    const [aiPrompt, setAiPrompt] = useState("");
+    const [isGenerating, setIsGenerating] = useState(false);
 
     // Calculate days based on items or default to 3. 
     // Ideally this should be dynamic or part of itinerary metadata.
@@ -134,8 +139,83 @@ export function ItineraryBuilder({ itineraryId, items, onItemsChange, user }: It
     // Helper to add a new place (called from parent or search)
     // Exported via context or prop reference in real app
 
+    const handleAIGenerate = async () => {
+        if (!aiPrompt || isGenerating) return;
+        setIsGenerating(true);
+        const result = await generateItinerary(aiPrompt, itineraryId);
+        if (result.success) {
+            setIsAIModalOpen(false);
+            setAiPrompt("");
+            // The action revalidates, but we might need a local refresh or parent update
+            window.location.reload(); // Simple way for now since we're using actions
+        } else {
+            alert(result.error);
+        }
+        setIsGenerating(false);
+    };
+
     return (
-        <>
+        <div className="relative">
+            {/* AI Floating Button */}
+            <button
+                onClick={() => setIsAIModalOpen(true)}
+                className="fixed bottom-24 right-8 z-50 flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full shadow-2xl shadow-blue-500/40 hover:scale-105 transition-all font-bold text-sm tracking-tight border border-white/20"
+            >
+                <Sparkles className="w-4 h-4 fill-white" />
+                AI Magic
+            </button>
+
+            {/* AI Prompt Modal */}
+            {isAIModalOpen && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm">
+                    <div className="w-full max-w-lg bg-neutral-900 border border-white/10 rounded-3xl p-8 shadow-2xl animate-in zoom-in-95 duration-200">
+                        <div className="flex justify-between items-center mb-6">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-blue-500/20 rounded-xl">
+                                    <Wand2 className="w-6 h-6 text-blue-400" />
+                                </div>
+                                <h3 className="text-2xl font-bold text-white tracking-tight">Generate with AI</h3>
+                            </div>
+                            <button onClick={() => setIsAIModalOpen(false)} className="p-2 hover:bg-white/5 rounded-full text-neutral-400">
+                                <X className="w-6 h-6" />
+                            </button>
+                        </div>
+
+                        <p className="text-neutral-400 mb-6 leading-relaxed">
+                            Tell Itero what kind of trip you want. Be specific about days, locations, and interests!
+                        </p>
+
+                        <textarea
+                            value={aiPrompt}
+                            onChange={(e) => setAiPrompt(e.target.value)}
+                            placeholder="Example: 3 days in Paris focusing on art, bakeries, and hidden gems in Montmartre."
+                            className="w-full h-40 bg-black/40 border border-white/10 rounded-2xl p-6 text-white placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none mb-6 text-lg transition-all"
+                        />
+
+                        <button
+                            onClick={handleAIGenerate}
+                            disabled={!aiPrompt || isGenerating}
+                            className={`w-full py-4 rounded-2xl font-bold text-white flex items-center justify-center gap-2 transition-all ${
+                                !aiPrompt || isGenerating 
+                                ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed' 
+                                : 'bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-500/20 active:scale-[0.98]'
+                            }`}
+                        >
+                            {isGenerating ? (
+                                <>
+                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                    Itero is thinking...
+                                </>
+                            ) : (
+                                <>
+                                    <Sparkles className="w-5 h-5 fill-white" />
+                                    Generate Itinerary
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </div>
+            )}
             <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
@@ -192,6 +272,6 @@ export function ItineraryBuilder({ itineraryId, items, onItemsChange, user }: It
                     user={user}
                 />
             )}
-        </>
+        </div>
     );
 }

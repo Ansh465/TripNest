@@ -1,4 +1,4 @@
--- Consolidated Migration Script for TripNest
+-- Consolidated Migration Script for Itero
 
 -- 1. Initial Schema (Users, Places, Itineraries, Items)
 -- Create users table (public profile)

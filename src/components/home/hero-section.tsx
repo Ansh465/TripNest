@@ -38,7 +38,7 @@ export function HeroSection() {
                 </h1>
 
                 <p className="text-xl text-neutral-100 max-w-2xl leading-relaxed mb-8 drop-shadow-md font-medium text-balance">
-                    TripNest is the all-in-one travel companion that helps you plan, collaborate, and explore the world with ease.
+                    Itero is the all-in-one travel companion that helps you plan, collaborate, and explore the world with ease.
                 </p>
 
 

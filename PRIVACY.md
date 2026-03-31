@@ -3,7 +3,7 @@
 **Effective date:** February 17, 2026
 
 ### 1. Who We Are
-**TripNest** (“we”, “us”, “our”) is a travel‑itinerary web application operated by **[YOUR LEGAL ENTITY]**. This Privacy Policy explains how we collect, use, share, and protect personal information you provide to us.
+**Itero** (“we”, “us”, “our”) is a travel‑itinerary web application operated by **[YOUR LEGAL ENTITY]**. This Privacy Policy explains how we collect, use, share, and protect personal information you provide to us.
 
 ### 2. Information We Collect
 

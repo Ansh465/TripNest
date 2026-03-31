@@ -13,13 +13,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TripNest - Your AI Travel Companion",
+  title: "Itero - Your AI Travel Companion",
   description: "Plan, collaborate, and explore the world with ease.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "TripNest",
+    title: "Itero",
   },
   formatDetection: {
     telephone: false,

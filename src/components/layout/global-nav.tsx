@@ -25,7 +25,7 @@ export function GlobalNav({ session }: { session: any }) {
                     <Map className="h-4 w-4" />
                 </div>
                 <span className="text-lg font-bold tracking-tight text-neutral-900 drop-shadow-sm dark:text-white hidden sm:block">
-                    TripNest
+                    Itero
                 </span>
             </Link>
 

@@ -3,7 +3,7 @@
 **Effective date:** February 17, 2026
 
 ### 1. Introduction & Acceptance
-1.1. **TripNest** (the “Site”, “Service”, “we”, “us”, “our”) is operated by **[YOUR LEGAL ENTITY]** (the “Company”).  
+1.1. **Itero** (the “Site”, “Service”, “we”, “us”, “our”) is operated by **[YOUR LEGAL ENTITY]** (the “Company”).  
 1.2. By accessing or using the Site (including any mobile‑friendly web pages, APIs, or related services), you (“User”, “you”, “your”) agree to be bound by these Terms of Service (the “Terms”). If you do **not** agree, you must **not** use the Site.
 
 ### 2. Eligibility

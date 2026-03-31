@@ -30,7 +30,7 @@ export function HowItWorks() {
             <div className="max-w-6xl mx-auto">
                 <div className="container px-6 mx-auto">
                     <div className="text-center max-w-3xl mx-auto mb-16">
-                        <h2 className="text-3xl font-bold tracking-tight mb-4 text-white">How TripNest Works</h2>
+                        <h2 className="text-3xl font-bold tracking-tight mb-4 text-white">How Itero Works</h2>
                         <p className="text-neutral-400 text-lg">
                             From inspiration to departure, we&apos;re with you every step of the way.
                         </p>

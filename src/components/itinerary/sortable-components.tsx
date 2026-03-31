@@ -7,6 +7,9 @@ import { GripVertical, Trash2, Camera } from 'lucide-react';
 import clsx from 'clsx';
 import { Database } from '@/types/supabase';
 import { VoteControl } from './vote-control';
+import { getForecast, WeatherData } from '@/app/actions/weather';
+import { useEffect, useState } from 'react';
+import { Cloud, Sun, CloudRain, Thermometer } from 'lucide-react';
 
 export type ItineraryItem = Database['public']['Tables']['itinerary_items']['Row'] & {
     places: Database['public']['Tables']['places']['Row'] | null;
@@ -97,6 +100,8 @@ interface DayColumnProps {
 }
 
 export function DayColumn({ day, items, children }: DayColumnProps) {
+    const [weather, setWeather] = useState<WeatherData | null>(null);
+
     const { setNodeRef } = useDroppable({
         id: `day-${day}`,
         data: {
@@ -105,10 +110,38 @@ export function DayColumn({ day, items, children }: DayColumnProps) {
         }
     });
 
+    useEffect(() => {
+        if (items.length > 0 && items[0].places) {
+            const { lat, lon } = items[0].places;
+            getForecast(lat, lon).then((res) => {
+                if (Array.isArray(res) && res.length > 0) {
+                    // Match by day index or just pick one
+                    // For now, let's just pick the first forecast for the location
+                    setWeather(res[0]); 
+                }
+            });
+        }
+    }, [items]);
+
+    const WeatherIcon = () => {
+        if (!weather) return null;
+        if (weather.description.includes('rain')) return <CloudRain className="w-4 h-4 text-blue-400" />;
+        if (weather.description.includes('cloud')) return <Cloud className="w-4 h-4 text-neutral-400" />;
+        return <Sun className="w-4 h-4 text-yellow-400" />;
+    };
+
     return (
         <div className="flex flex-col h-full rounded-xl border border-neutral-200 bg-neutral-50/50 dark:border-neutral-800 dark:bg-neutral-900/20">
             <div className="p-4 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between bg-white/50 backdrop-blur-sm rounded-t-xl dark:bg-neutral-900/50">
-                <h3 className="font-semibold text-neutral-900 dark:text-neutral-50">Day {day}</h3>
+                <div className="flex items-center gap-3">
+                    <h3 className="font-semibold text-neutral-900 dark:text-neutral-50">Day {day}</h3>
+                    {weather && (
+                        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-bold uppercase tracking-wider border border-blue-500/20">
+                            <WeatherIcon />
+                            <span>{weather.temp}°C</span>
+                        </div>
+                    )}
+                </div>
                 <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-neutral-200 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
                     {items.length}
                 </span>

@@ -6,9 +6,9 @@ export function Footer() {
         <footer className="w-full border-t border-white/10 bg-black/40 py-12 px-6">
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
                 <div className="text-center md:text-left">
-                    <h4 className="text-lg font-bold text-white">TripNest</h4>
+                    <h4 className="text-lg font-bold text-white">Itero</h4>
                     <p className="text-neutral-500 text-sm mt-1">
-                        © {new Date().getFullYear()} TripNest. All rights reserved.
+                        © {new Date().getFullYear()} Itero. All rights reserved.
                     </p>
                 </div>
 
@@ -19,7 +19,7 @@ export function Footer() {
                 </div>
 
                 <div className="flex gap-4">
-                    <a href="https://github.com/ansh465/tripnest" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white transition-colors">
+                    <a href="https://github.com/ansh465/itero" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white transition-colors">
                         <Github className="w-5 h-5" />
                     </a>
                     {/* Add more social links as needed */}

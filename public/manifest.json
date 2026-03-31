@@ -1,7 +1,7 @@
 {
-    "name": "Travel Itinerary Platform",
-    "short_name": "TripNest",
-    "description": "Plan your perfect trip with ease.",
+    "name": "Itero - Travel Itinerary Platform",
+    "short_name": "Itero",
+    "description": "Plan your perfect trip with Ease.",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",

@@ -1,8 +1,8 @@
-# TripNest - AI Travel Companion 🌍✈️
+# Itero - AI Travel Companion 🌍✈️
 
-TripNest is a modern, full-stack travel itinerary planner built with Next.js, Supabase, and Tailwind CSS. It helps you organize trips, track expenses, and collaborate with friends in real-time.
+Itero is a modern, full-stack travel itinerary planner built with Next.js, Supabase, and Tailwind CSS. It helps you organize trips, track expenses, and collaborate with friends in real-time.
 
-![TripNest App](public/icon-512x512.png)
+![Itero App](public/icon-512x512.png)
 
 ## 🚀 Features
 
@@ -34,8 +34,8 @@ TripNest is a modern, full-stack travel itinerary planner built with Next.js, Su
 
 1.  **Clone the repo**
     ```bash
-    git clone https://github.com/yourusername/tripnest.git
-    cd tripnest
+    git clone https://github.com/yourusername/itero.git
+    cd itero
     ```
 
 2.  **Install dependencies**
